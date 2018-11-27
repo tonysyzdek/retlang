@@ -8,16 +8,8 @@ namespace Retlang.Channels
     /// Channel subscription methods.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public interface ISubscriber<T>
+    public interface ISubscriber<T> : ISimpleSubscriber<T>
     {
-        ///<summary>
-        /// Subscribe to messages on this channel. The provided action will be invoked via a Action on the provided executor.
-        ///</summary>
-        ///<param name="fiber">the target executor to receive the message</param>
-        ///<param name="receive"></param>
-        ///<returns>Unsubscriber object</returns>
-        IDisposable Subscribe(IFiber fiber, Action<T> receive);
-
         /// <summary>
         /// Subscribes to actions on the channel in batch form. The events will be batched if the consumer is unable to process the events 
         /// faster than the arrival rate.
@@ -37,7 +29,8 @@ namespace Retlang.Channels
         ///<param name="intervalInMs"></param>
         ///<typeparam name="K"></typeparam>
         ///<returns></returns>
-        IDisposable SubscribeToKeyedBatch<K>(IFiber fiber, Converter<T, K> keyResolver, Action<IDictionary<K, T>> receive, long intervalInMs);
+        IDisposable SubscribeToKeyedBatch<K>(IFiber fiber, Converter<T, K> keyResolver,
+            Action<IDictionary<K, T>> receive, long intervalInMs);
 
         /// <summary>
         /// Subscription that delivers the latest message to the consuming thread.  If a newer message arrives before the consuming thread
